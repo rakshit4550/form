@@ -21,9 +21,8 @@ const verifyOtp = async(req, res, next) => {
 
         res.status(200).json({message:'OTP Verified', status:true});
     } catch (error) {
-        f
+        return next(error);
     }
 }
-
 
 module.exports = verifyOtp;
