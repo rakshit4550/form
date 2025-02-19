@@ -1,30 +1,26 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
-const sendMail = (otp,email) => {
+const sendMail = async (otp, email) => {
+  try {
+    const transport = nodemailer.createTransport({
+      service: "gmail", // Use lowercase 'gmail'
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
 
-    try {
-        const transport = nodemailer.createTransport({
-            service:'GMAIL',
-            auth:{
-                user:process.env.EMAIL,
-                pass:process.env.EMAIL_PASSWORD
-            }
-        })
-    
-        const mailOptions = {
-            from : process.env.EMAIL,
-            to : email,
-            subject : 'Reset Password OTP',
-            html : `<div>${otp}</div>`
-        }
-        transport.sendMail(mailOptions,(error,info) => {
-            if(error){
-                throw new Error('Failed to Send Mail')
-            }
-        })
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Reset Password OTP",
+      html: `<div>Your OTP is: <b>${otp}</b></div>`,
+    };
+
+    const info = await transport.sendMail(mailOptions); // Await here
+  } catch (error) {
+    console.error("Failed to send email:", error);
+  }
+};
 
 module.exports = sendMail;
